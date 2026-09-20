@@ -20,6 +20,16 @@
             <textarea name="konten" rows="8" class="w-full border p-2 rounded-md mt-2">{{ $artikel->konten }}</textarea>
         </div>
 
+        <div class="mb-4">
+            <label class="block text-gray-700">Kategori (Opsional)</label>
+            <select name="category_id" class="w-full border p-2 rounded-md mt-2">
+                <option value="">-- Tanpa kategori --</option>
+                @foreach (($categories ?? collect()) as $cat)
+                    <option value="{{ $cat->id }}" {{ old('category_id', $artikel->category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->nama }}</option>
+                @endforeach
+            </select>
+        </div>
+
         @if ($artikel->gambar)
             <div class="mb-4">
                 <label class="block text-gray-700">Gambar Saat Ini</label>
