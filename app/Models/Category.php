@@ -23,6 +23,12 @@ class Category extends Model
                 $category->slug = Str::slug($category->nama);
             }
         });
+
+        static::updating(function (Category $category) {
+            if ($category->isDirty('nama') && ! empty($category->nama)) {
+                $category->slug = Str::slug($category->nama);
+            }
+        });
     }
 
     public function artikels(): HasMany
