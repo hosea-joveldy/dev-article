@@ -18,7 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Rute ini BEBAS DIBUKA siapa saja
+// These routes are OPEN to everyone
 Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
 
 Route::middleware(['auth'])->group(function () {
@@ -27,21 +27,21 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-// Rute ini BEBAS DIBUKA siapa saja
+// These routes are OPEN to everyone
 Route::get('/artikel/{id}', [ArtikelController::class, 'show'])->name('artikel.show');
 
-// Rute ini TERGEMBOK! Hanya bisa diakses oleh Karyawan yang punya kunci (Sudah Login)
+// These routes are LOCKED! Only accessible to logged-in users
 Route::middleware(['auth'])->group(function () {
     Route::get('/artikel/{id}/edit', [ArtikelController::class, 'edit'])->name('artikel.edit');
     Route::put('/artikel/{id}', [ArtikelController::class, 'update'])->name('artikel.update');
     Route::delete('/artikel/{id}', [ArtikelController::class, 'destroy'])->name('artikel.destroy');
 
-    // Suka / tidak suka (toggle + beralih), dan batalkan reaksi
+    // Like / dislike (toggle + switch), and remove reaction
     Route::post('/artikel/{id}/like', [ArtikelReactionController::class, 'like'])->name('artikel.like');
     Route::post('/artikel/{id}/dislike', [ArtikelReactionController::class, 'dislike'])->name('artikel.dislike');
     Route::delete('/artikel/{id}/reaction', [ArtikelReactionController::class, 'destroy'])->name('artikel.reaction.destroy');
 
-    // Komentar: buat pada artikel, hapus milik sendiri (atau admin)
+    // Comments: create on an article, delete own (or admin)
     Route::post('/artikel/{id}/komentar', [KomentarController::class, 'store'])->name('komentar.store');
     Route::delete('/komentar/{id}', [KomentarController::class, 'destroy'])->name('komentar.destroy');
 });

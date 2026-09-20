@@ -60,7 +60,7 @@
         <!-- 1b. Category Select (Optional) -->
         <div>
             <label for="category_id" class="block text-xs font-mono uppercase tracking-wider font-semibold mb-2" style="color: var(--text-main);">
-                Kategori <span class="normal-case font-normal" style="color: var(--text-muted);">(Opsional)</span>
+                Category <span class="normal-case font-normal" style="color: var(--text-muted);">(Optional)</span>
             </label>
             <select
                 name="category_id"
@@ -68,7 +68,7 @@
                 class="w-full text-sm px-4 py-3 rounded border focus:outline-none focus:ring-1 cursor-pointer"
                 style="background-color: var(--bg-surface); border-color: var(--border); color: var(--text-main); --tw-ring-color: var(--accent);"
             >
-                <option value="">-- Tanpa kategori --</option>
+                <option value="">-- No category --</option>
                 @foreach (($categories ?? collect()) as $cat)
                     <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->nama }}</option>
                 @endforeach

@@ -30,17 +30,17 @@ class StoreArtikelRequest extends FormRequest
     }
 
     /**
-     * Pesan validasi dalam Bahasa Indonesia.
+     * Validation messages in English.
      *
      * @return array<string, string>
      */
     public function messages(): array
     {
         return [
-            'judul.required' => 'Judul wajib diisi.',
-            'konten.required' => 'Konten wajib diisi.',
-            'gambar.image' => 'Gambar harus berupa file gambar.',
-            'category_id.exists' => 'Kategori yang dipilih tidak valid.',
+            'judul.required' => 'Title is required.',
+            'konten.required' => 'Content is required.',
+            'gambar.image' => 'The image must be an image file.',
+            'category_id.exists' => 'The selected category is invalid.',
         ];
     }
 }

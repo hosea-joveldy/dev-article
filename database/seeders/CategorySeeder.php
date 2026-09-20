@@ -14,12 +14,12 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $names = [
-            'Teknologi',
+            'Technology',
             'Tutorial',
-            'Pemrograman',
-            'Opini',
-            'Berita',
-            'Tips & Trik',
+            'Programming',
+            'Opinion',
+            'News',
+            'Tips & Tricks',
         ];
 
         foreach ($names as $nama) {

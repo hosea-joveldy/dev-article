@@ -2,13 +2,13 @@
 
 @section('lubang_konten')
     <h1 class="text-3xl font-extrabold text-gray-800">
-        Ini adalah Halaman Beranda.
+        This is the Home Page.
     </h1>
     <p class="text-gray-600 mt-2">
-        Konten ini dikirim langsung masuk ke dalam perut Master Layout. llololol
+        This content is passed directly into the Master Layout.
     </p>
 
-    <!-- Kapanpun butuh tombol Tailwind sakti, cukup panggil tag x- ajaib ini! -->
-    <x-tombol-merah>Hapus Data</x-tombol-merah>
-    <x-tombol-merah>Batalkan Transaksi</x-tombol-merah>
+    <!-- Whenever you need a magic Tailwind button, just call this x- tag! -->
+    <x-tombol-merah>Delete Data</x-tombol-merah>
+    <x-tombol-merah>Cancel Transaction</x-tombol-merah>
 @endsection

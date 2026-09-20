@@ -150,19 +150,19 @@
                             @auth
                                 <form action="{{ route('artikel.like', $artikel->id) }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" title="Suka" class="hover:underline {{ $likeClass }}">
+                                    <button type="submit" title="Like" class="hover:underline {{ $likeClass }}">
                                         &#9650; {{ $artikel->likes_count ?? 0 }}
                                     </button>
                                 </form>
                                 <form action="{{ route('artikel.dislike', $artikel->id) }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" title="Tidak suka" class="hover:underline {{ $dislikeClass }}">
+                                    <button type="submit" title="Dislike" class="hover:underline {{ $dislikeClass }}">
                                         &#9660; {{ $artikel->dislikes_count ?? 0 }}
                                     </button>
                                 </form>
                             @else
-                                <span title="Suka" style="color: var(--text-muted);">&#9650; {{ $artikel->likes_count ?? 0 }}</span>
-                                <span title="Tidak suka" style="color: var(--text-muted);">&#9660; {{ $artikel->dislikes_count ?? 0 }}</span>
+                                <span title="Like" style="color: var(--text-muted);">&#9650; {{ $artikel->likes_count ?? 0 }}</span>
+                                <span title="Dislike" style="color: var(--text-muted);">&#9660; {{ $artikel->dislikes_count ?? 0 }}</span>
                             @endauth
                         </div>
                     </div>

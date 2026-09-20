@@ -27,15 +27,15 @@ class StoreCommentRequest extends FormRequest
     }
 
     /**
-     * Pesan validasi dalam Bahasa Indonesia.
+     * Validation messages in English.
      *
      * @return array<string, string>
      */
     public function messages(): array
     {
         return [
-            'body.required' => 'Komentar wajib diisi.',
-            'body.max' => 'Komentar maksimal 1000 karakter.',
+            'body.required' => 'Comment is required.',
+            'body.max' => 'Comment may not exceed 1000 characters.',
         ];
     }
 }

@@ -43,7 +43,7 @@ This list is ordered roughly by value/effort (highest leverage first).
 **Gap:** `show/edit/update/destroy` use `Artikel::find($id)` with no null check — a bad ID fatals instead of 404. Validation is inline and inconsistent (`gambar` max 10000 on store vs 4096 on update).
 **Add:**
 - `findOrFail()` / implicit route-model binding + custom 404 view.
-- `StoreArtikelRequest` / `UpdateArtikelRequest` with shared rules and Indonesian messages.
+- `StoreArtikelRequest` / `UpdateArtikelRequest` with shared rules and English messages.
 **Why:** Reliability + UX. Small change, removes a whole class of 500s.
 
 ## 6. Storage Cleanup on Delete + Consistent Image Rules

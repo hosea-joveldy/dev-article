@@ -84,22 +84,22 @@ class ArtikelController extends Controller
     public function store(StoreArtikelRequest $request) {
         $validated = $request->validated();
 
-        // Simpan data ke database
+        // Save data to the database
         //Artikel::create($request->all());
         $baru = new Artikel();
-        $baru->judul = $validated['judul'];         //Ambil dari Kotak "judul"
-        $baru->konten = $validated['konten'];   //Ambil dari Kotak "konten"
+        $baru->judul = $validated['judul'];         //Take from the "judul" field
+        $baru->konten = $validated['konten'];   //Take from the "konten" field
         $baru->category_id = $validated['category_id'] ?? null;
 
-        // Simpan Gambar ke Storage
+        // Save the image to storage
         if ($request->hasFile('gambar')) {
             $baru->gambar = $request->file('gambar')->store('gambars', 'public');
         }
 
-        $baru->save(); //DORONG ke Database!
+        $baru->save(); //PUSH to the database!
 
-        // Redirect ke halaman daftar artikel
-        return redirect('/')->with('success', 'Artikel berhasil ditambahkan!');
+        // Redirect to the article list page
+        return redirect('/')->with('success', 'Article created successfully!');
     }
 
     /**
@@ -124,31 +124,31 @@ class ArtikelController extends Controller
         return view('artikel.edit', compact('artikel', 'categories'));
     }
 
-    // Aksi 6: Menyimpan Perubahan Data
+    // Action 6: Persisting data changes
     public function update(UpdateArtikelRequest $request, $id) {
         $validated = $request->validated();
 
-        // Cari data berdasarkan ID
+        // Find the record by ID
         $artikel = Artikel::findOrFail($id);
         $artikel->judul = $validated['judul'];
         $artikel->konten = $validated['konten'];
         $artikel->category_id = $validated['category_id'] ?? null;
 
-        // Jika ada gambar baru
+        // If a new image was uploaded
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama
+            // Delete the old image
             if ($artikel->gambar) {
                 Storage::disk('public')->delete($artikel->gambar);
             }
 
-            // Simpan gambar baru
+            // Save the new image
             $artikel->gambar = $request->file('gambar')
                 ->store('gambars', 'public');
         }
 
         $artikel->save();
 
-        return redirect('/artikel')->with('success', 'Artikel berhasil diupdate!');
+        return redirect('/artikel')->with('success', 'Article updated successfully!');
     }
 
 
@@ -158,6 +158,6 @@ class ArtikelController extends Controller
     public function destroy($id) {
         $artikel = Artikel::findOrFail($id);
         $artikel->delete();
-        return redirect('/artikel')->with('success', 'Artikel berhasil dihapus!');
+        return redirect('/artikel')->with('success', 'Article deleted successfully!');
     }
 }
