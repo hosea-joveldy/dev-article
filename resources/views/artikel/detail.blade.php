@@ -81,7 +81,7 @@
         </div>
     </main>
 
-    <!-- Reactions: Suka / Tidak Suka -->
+    <!-- Reactions: Like / Dislike -->
     @php
         $myValue = (int) (($userReaction?->value) ?? 0);
         $detailLikeClass = $myValue === 1 ? 'reaction-liked' : 'reaction-off';
@@ -92,14 +92,14 @@
         @auth
             <form action="{{ route('artikel.like', $artikel->id) }}" method="POST" class="inline">
                 @csrf
-                <button type="submit" title="Suka" class="px-3 py-1.5 rounded border hover:opacity-80 {{ $detailLikeClass }}" style="background-color: var(--bg-surface); border-color: var(--border);">
-                    &#9650; Suka ({{ $artikel->likes_count ?? 0 }})
+                <button type="submit" title="Like" class="px-3 py-1.5 rounded border hover:opacity-80 {{ $detailLikeClass }}" style="background-color: var(--bg-surface); border-color: var(--border);">
+                    &#9650; Like ({{ $artikel->likes_count ?? 0 }})
                 </button>
             </form>
             <form action="{{ route('artikel.dislike', $artikel->id) }}" method="POST" class="inline">
                 @csrf
-                <button type="submit" title="Tidak suka" class="px-3 py-1.5 rounded border hover:opacity-80 {{ $detailDislikeClass }}" style="background-color: var(--bg-surface); border-color: var(--border);">
-                    &#9660; Tidak suka ({{ $artikel->dislikes_count ?? 0 }})
+                <button type="submit" title="Dislike" class="px-3 py-1.5 rounded border hover:opacity-80 {{ $detailDislikeClass }}" style="background-color: var(--bg-surface); border-color: var(--border);">
+                    &#9660; Dislike ({{ $artikel->dislikes_count ?? 0 }})
                 </button>
             </form>
             @if ($userReaction)
@@ -107,21 +107,21 @@
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="hover:underline" style="color: var(--text-muted);">
-                        [Batalkan reaksi]
+                        [Remove reaction]
                     </button>
                 </form>
             @endif
         @else
-            <span class="{{ $detailLikeClass }}">&#9650; Suka ({{ $artikel->likes_count ?? 0 }})</span>
-            <span class="{{ $detailDislikeClass }}">&#9660; Tidak suka ({{ $artikel->dislikes_count ?? 0 }})</span>
-            <a href="{{ route('login') }}" class="hover:underline" style="color: var(--accent);">Login untuk memberi reaksi</a>
+            <span class="{{ $detailLikeClass }}">&#9650; Like ({{ $artikel->likes_count ?? 0 }})</span>
+            <span class="{{ $detailDislikeClass }}">&#9660; Dislike ({{ $artikel->dislikes_count ?? 0 }})</span>
+            <a href="{{ route('login') }}" class="hover:underline" style="color: var(--accent);">Log in to react</a>
         @endauth
     </section>
 
     <!-- Comments -->
     <section id="komentar" class="mt-4 pt-8 border-t" style="border-color: var(--border);">
         <h2 class="text-xl font-bold">
-            Komentar <span class="text-xs font-mono font-normal" style="color: var(--text-muted);">({{ $komentars->total() }})</span>
+            Comments <span class="text-xs font-mono font-normal" style="color: var(--text-muted);">({{ $komentars->total() }})</span>
         </h2>
 
         @if (session('success'))
@@ -134,14 +134,14 @@
             <form action="{{ route('komentar.store', $artikel->id) }}" method="POST" class="mt-6">
                 @csrf
                 <label for="body" class="block text-xs font-mono uppercase tracking-wider font-semibold mb-2" style="color: var(--text-main);">
-                    Tulis Komentar
+                    Write a Comment
                 </label>
                 <textarea
                     name="body"
                     id="body"
                     rows="3"
                     maxlength="1000"
-                    placeholder="Tulis komentar Anda di sini..."
+                    placeholder="Write your comment here..."
                     class="w-full text-sm p-3 rounded border focus:outline-none focus:ring-1 resize-y"
                     style="background-color: var(--bg-surface); border-color: var(--border); color: var(--text-main); --tw-ring-color: var(--accent);"
                     required
@@ -154,13 +154,13 @@
                     class="mt-3 px-5 py-2.5 rounded font-mono text-xs font-bold transition-transform active:scale-95 hover:opacity-90"
                     style="background-color: var(--accent); color: var(--bg-main);"
                 >
-                    Kirim Komentar
+                    Post Comment
                 </button>
             </form>
         @else
             <p class="mt-6 font-mono text-xs" style="color: var(--text-muted);">
-                <a href="{{ route('login') }}" class="hover:underline font-bold" style="color: var(--accent);">Login</a>
-                untuk menulis komentar.
+                <a href="{{ route('login') }}" class="hover:underline font-bold" style="color: var(--accent);">Log in</a>
+                to write a comment.
             </p>
         @endauth
 
@@ -169,7 +169,7 @@
                 <div class="p-4 rounded border" style="background-color: var(--bg-surface); border-color: var(--border);">
                     <div class="flex items-center justify-between gap-3 font-mono text-xs" style="color: var(--text-muted);">
                         <span class="font-semibold" style="color: var(--text-main);">
-                            {{ $komentar->user?->name ?? 'Pengguna' }}
+                            {{ $komentar->user?->name ?? 'User' }}
                         </span>
                         <span>{{ $komentar->created_at ? $komentar->created_at->diffForHumans() : '' }}</span>
                     </div>
@@ -177,18 +177,18 @@
                         {!! $komentar->body_html !!}
                     </div>
                     @if (auth()->id() === $komentar->user_id || (bool) (auth()->user()?->is_admin ?? false))
-                        <form action="{{ route('komentar.destroy', $komentar->id) }}" method="POST" onsubmit="return confirm('Hapus komentar ini?');" class="mt-2">
+                        <form action="{{ route('komentar.destroy', $komentar->id) }}" method="POST" onsubmit="return confirm('Delete this comment?');" class="mt-2">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="font-mono text-xs hover:underline" style="color: var(--danger);">
-                                [Hapus]
+                                [Delete]
                             </button>
                         </form>
                     @endif
                 </div>
             @empty
                 <p class="py-8 text-center border border-dashed rounded font-mono text-xs" style="border-color: var(--border); color: var(--text-muted);">
-                    // Belum ada komentar. Jadilah yang pertama!
+                    // No comments yet. Be the first!
                 </p>
             @endforelse
         </div>

@@ -10,7 +10,7 @@ use Illuminate\Http\RedirectResponse;
 class KomentarController extends Controller
 {
     /**
-     * Simpan komentar baru (auth required via route middleware).
+     * Store a new comment (auth required via route middleware).
      */
     public function store(StoreCommentRequest $request, string $id): RedirectResponse
     {
@@ -21,11 +21,11 @@ class KomentarController extends Controller
             'body' => $request->validated()['body'],
         ]);
 
-        return back()->with('success', 'Komentar berhasil ditambahkan!');
+        return back()->with('success', 'Comment added successfully!');
     }
 
     /**
-     * Hapus komentar. Hanya penulis komentar (atau admin) yang boleh.
+     * Delete a comment. Only the comment author (or an admin) may do so.
      */
     public function destroy(string $id): RedirectResponse
     {
@@ -34,11 +34,11 @@ class KomentarController extends Controller
 
         $isAdmin = (bool) ($user->is_admin ?? false);
         if ($comment->user_id !== $user->id && ! $isAdmin) {
-            abort(403, 'Anda tidak berhak menghapus komentar ini.');
+            abort(403, 'You are not authorized to delete this comment.');
         }
 
         $comment->delete();
 
-        return back()->with('success', 'Komentar berhasil dihapus!');
+        return back()->with('success', 'Comment deleted successfully!');
     }
 }

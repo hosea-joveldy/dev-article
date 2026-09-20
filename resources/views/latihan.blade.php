@@ -1,7 +1,7 @@
-<h1>Selamat datang, {{$nama}}</h1>
+<h1>Welcome, {{$nama}}</h1>
 
 @if($umur > 17)
-    <p>Anda sudah dewasa.</p>
+    <p>You are an adult.</p>
 @else 
-    <p>Anda masih anak-anak.</p>
+    <p>You are still a child.</p>
 @endif

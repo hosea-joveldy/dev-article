@@ -9,7 +9,7 @@ use Illuminate\Http\RedirectResponse;
 class ArtikelReactionController extends Controller
 {
     /**
-     * Suka: toggle (klik lagi = batalkan), beralih dari tidak suka.
+     * Like: toggle (clicking again = remove), switch from dislike.
      */
     public function like(string $id): RedirectResponse
     {
@@ -17,7 +17,7 @@ class ArtikelReactionController extends Controller
     }
 
     /**
-     * Tidak suka: toggle (klik lagi = batalkan), beralih dari suka.
+     * Dislike: toggle (clicking again = remove), switch from like.
      */
     public function dislike(string $id): RedirectResponse
     {
@@ -25,7 +25,7 @@ class ArtikelReactionController extends Controller
     }
 
     /**
-     * Batalkan reaksi user pada artikel ini.
+     * Remove the user's reaction on this article.
      */
     public function destroy(string $id): RedirectResponse
     {
@@ -42,10 +42,10 @@ class ArtikelReactionController extends Controller
         $existing = $artikel->reactions()->where('user_id', auth()->id())->first();
 
         if ($existing && (int) $existing->value === $value) {
-            // Toggle: reaksi yang sama diklik lagi -> batalkan
+            // Toggle: clicking the same reaction again -> remove it
             $existing->delete();
         } else {
-            // Buat baru atau beralih (suka <-> tidak suka), satu reaksi per user per artikel
+            // Create new or switch (like <-> dislike), one reaction per user per article
             $artikel->reactions()->updateOrCreate(
                 ['user_id' => auth()->id()],
                 ['value' => $value]
