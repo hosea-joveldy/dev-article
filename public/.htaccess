@@ -9,7 +9,7 @@ php_value memory_limit 256M
 
     RewriteEngine On
 
-    RewriteBase /heru/perpustakaan
+    RewriteBase /heru/dev-article
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
