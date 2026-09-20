@@ -2,6 +2,12 @@
 
 @section('title', 'Index — dev.logs')
 
+<style>
+    .reaction-off { color: var(--text-muted); }
+    .reaction-liked { color: var(--accent); font-weight: 700; }
+    .reaction-disliked { color: var(--danger); font-weight: 700; }
+</style>
+
 @section('content')
 <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
     <!-- Top Utility Bar: Branding + New Entry Button -->
@@ -61,14 +67,41 @@
                 </div>
             </div>
 
+            <!-- Category Filter (Submits on Change, preserves q/sort) -->
+            <div class="relative sm:w-48">
+                <select
+                    name="category"
+                    onchange="document.getElementById('filterForm').submit()"
+                    class="w-full text-xs font-mono py-2.5 px-3 rounded border appearance-none pr-8 cursor-pointer focus:outline-none"
+                    style="background-color: var(--bg-surface); border-color: var(--border); color: var(--text-main);"
+                >
+                    <option value="">Category: All</option>
+                    @foreach (($categories ?? collect()) as $cat)
+                        <option value="{{ $cat->id }}" {{ (($activeCategory ?? null)?->id ?? null) === $cat->id ? 'selected' : '' }}>{{ $cat->nama }}</option>
+                    @endforeach
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5" style="color: var(--text-muted);">
+                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+            </div>
+
             <!-- Clear Active Filters -->
-            @if(request()->hasAny(['q', 'sort']))
+            @if(request()->hasAny(['q', 'sort', 'category']))
                 <a href="{{ url('/') }}" class="text-xs font-mono flex items-center justify-center px-3 py-2 rounded border hover:opacity-80 transition" style="background-color: var(--bg-surface-alt); border-color: var(--border); color: var(--text-muted);">
                     [Reset]
                 </a>
             @endif
         </form>
     </section>
+
+    <!-- Active Category Notice -->
+    @if (! empty($activeCategory ?? null))
+        <p class="mb-6 text-xs font-mono" style="color: var(--text-muted);">
+            Filtering by category:
+            <span class="px-2 py-0.5 rounded border font-semibold" style="background-color: var(--bg-surface); border-color: var(--border); color: var(--accent);">{{ $activeCategory->nama }}</span>
+            <a href="{{ url('/') . '?' . http_build_query(request()->except(['category', 'page'])) }}" class="underline hover:opacity-80 ml-1">[clear]</a>
+        </p>
+    @endif
 
     <!-- Content Grid (1 col mobile, 2 col tablet, 3 col desktop) -->
     <main class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -101,6 +134,37 @@
                         <p class="mt-3 text-xs leading-relaxed line-clamp-3" style="color: var(--text-muted);">
                             {{ Str::limit(strip_tags($artikel->konten_html), 120, '...') }}
                         </p>
+
+                        <!-- Category Badge + Like/Dislike Counts -->
+                        <div class="mt-3 flex flex-wrap items-center gap-2 text-xs font-mono">
+                            @if ($artikel->category)
+                                <a href="{{ url('/') . '?category=' . $artikel->category->id }}" class="px-2 py-0.5 rounded border hover:opacity-80" style="background-color: var(--bg-surface-alt); border-color: var(--border); color: var(--accent);">
+                                    {{ $artikel->category->nama }}
+                                </a>
+                            @endif
+                            @php
+                                $myReaction = (int) (($userReactions ?? collect())[$artikel->id] ?? 0);
+                                $likeClass = $myReaction === 1 ? 'reaction-liked' : 'reaction-off';
+                                $dislikeClass = $myReaction === -1 ? 'reaction-disliked' : 'reaction-off';
+                            @endphp
+                            @auth
+                                <form action="{{ route('artikel.like', $artikel->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" title="Suka" class="hover:underline {{ $likeClass }}">
+                                        &#9650; {{ $artikel->likes_count ?? 0 }}
+                                    </button>
+                                </form>
+                                <form action="{{ route('artikel.dislike', $artikel->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" title="Tidak suka" class="hover:underline {{ $dislikeClass }}">
+                                        &#9660; {{ $artikel->dislikes_count ?? 0 }}
+                                    </button>
+                                </form>
+                            @else
+                                <span title="Suka" style="color: var(--text-muted);">&#9650; {{ $artikel->likes_count ?? 0 }}</span>
+                                <span title="Tidak suka" style="color: var(--text-muted);">&#9660; {{ $artikel->dislikes_count ?? 0 }}</span>
+                            @endauth
+                        </div>
                     </div>
 
                     <!-- Actions -->

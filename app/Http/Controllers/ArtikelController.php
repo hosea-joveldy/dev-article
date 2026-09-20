@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreArtikelRequest;
+use App\Http\Requests\UpdateArtikelRequest;
+use App\Models\Artikel;
+use App\Models\ArticleReaction;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Artikel;
 
 class ArtikelController extends Controller
 {
@@ -13,7 +17,7 @@ class ArtikelController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Artikel::query();
+        $query = Artikel::query()->with('category')->withCount(['likes', 'dislikes']);
 
         // 1. Search filter
         if ($request->filled('q')) {
@@ -24,7 +28,20 @@ class ArtikelController extends Controller
             });
         }
 
-        // 2. Sorting
+        // 2. Category filter (?category=<id|slug>), preserves q/sort via the filter form + withQueryString
+        $categories = Category::orderBy('nama')->get();
+        $activeCategory = null;
+        if ($request->filled('category')) {
+            $categoryParam = $request->input('category');
+            $activeCategory = Category::where('id', $categoryParam)
+                ->orWhere('slug', $categoryParam)
+                ->first();
+            if ($activeCategory) {
+                $query->where('category_id', $activeCategory->id);
+            }
+        }
+
+        // 3. Sorting
         switch ($request->input('sort')) {
             case 'oldest':
                 $query->oldest();
@@ -38,9 +55,17 @@ class ArtikelController extends Controller
                 break;
         }
 
-        $berita = $query->paginate(6);
+        $berita = $query->paginate(6)->withQueryString();
 
-        return view('welcome', compact('berita'));
+        // Current user's reactions for highlight on the list page (one query, no N+1)
+        $userReactions = collect();
+        if (auth()->check()) {
+            $userReactions = ArticleReaction::where('user_id', auth()->id())
+                ->whereIn('artikel_id', $berita->getCollection()->modelKeys())
+                ->pluck('value', 'artikel_id');
+        }
+
+        return view('welcome', compact('berita', 'categories', 'activeCategory', 'userReactions'));
     }
 
     /**
@@ -48,31 +73,29 @@ class ArtikelController extends Controller
      */
     public function create()
     {
-        return view('artikel.create');
+        $categories = Category::orderBy('nama')->get();
+
+        return view('artikel.create', compact('categories'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {
-        // Validasi Data
-        $request->validate([
-            'judul' => 'required',
-            'konten' => 'required',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10000', // Validasi gambar opsional
-        ]);
+    public function store(StoreArtikelRequest $request) {
+        $validated = $request->validated();
 
         // Simpan data ke database
         //Artikel::create($request->all());
         $baru = new Artikel();
-        $baru->judul = $request->judul;         //Ambil dari Kotak "judul"
-        $baru->konten = $request->konten;   //Ambil dari Kotak "konten"
-        
+        $baru->judul = $validated['judul'];         //Ambil dari Kotak "judul"
+        $baru->konten = $validated['konten'];   //Ambil dari Kotak "konten"
+        $baru->category_id = $validated['category_id'] ?? null;
+
         // Simpan Gambar ke Storage
         if ($request->hasFile('gambar')) {
             $baru->gambar = $request->file('gambar')->store('gambars', 'public');
         }
-        
+
         $baru->save(); //DORONG ke Database!
 
         // Redirect ke halaman daftar artikel
@@ -84,31 +107,32 @@ class ArtikelController extends Controller
      */
     public function show(string $id)
     {
-        $artikel = Artikel::find($id);
-        return view('artikel.detail', compact('artikel'));
+        $artikel = Artikel::with('category')->withCount(['likes', 'dislikes'])->findOrFail($id);
+        $komentars = $artikel->comments()->with('user')->oldest()->paginate(10);
+        $userReaction = $artikel->reactionFor(auth()->user());
+
+        return view('artikel.detail', compact('artikel', 'komentars', 'userReaction'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit($id) {
-        $artikel = Artikel::find($id);
-        return view('artikel.edit', compact('artikel'));
+        $artikel = Artikel::findOrFail($id);
+        $categories = Category::orderBy('nama')->get();
+
+        return view('artikel.edit', compact('artikel', 'categories'));
     }
 
     // Aksi 6: Menyimpan Perubahan Data
-    public function update(Request $request, $id) {
-        // Validasi Data
-        $request->validate([
-            'judul' => 'required',
-            'konten' => 'required',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:4096', // Validasi gambar opsional
-        ]);
+    public function update(UpdateArtikelRequest $request, $id) {
+        $validated = $request->validated();
 
         // Cari data berdasarkan ID
-        $artikel = Artikel::find($id);
-        $artikel->judul = $request->judul;
-        $artikel->konten = $request->konten;
+        $artikel = Artikel::findOrFail($id);
+        $artikel->judul = $validated['judul'];
+        $artikel->konten = $validated['konten'];
+        $artikel->category_id = $validated['category_id'] ?? null;
 
         // Jika ada gambar baru
         if ($request->hasFile('gambar')) {
@@ -132,7 +156,7 @@ class ArtikelController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy($id) {
-        $artikel = Artikel::find($id);
+        $artikel = Artikel::findOrFail($id);
         $artikel->delete();
         return redirect('/artikel')->with('success', 'Artikel berhasil dihapus!');
     }
