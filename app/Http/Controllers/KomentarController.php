@@ -6,9 +6,31 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Models\Artikel;
 use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class KomentarController extends Controller
 {
+    /**
+     * Display a listing of comments for moderation (admin only).
+     */
+    public function index(Request $request)
+    {
+        $query = Comment::query()->with(['user', 'artikel'])->latest();
+
+        if ($request->filled('q')) {
+            $searchTerm = $request->input('q');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('body', 'like', "%{$searchTerm}%")
+                  ->orWhereHas('user', fn ($uq) => $uq->where('name', 'like', "%{$searchTerm}%"))
+                  ->orWhereHas('artikel', fn ($aq) => $aq->where('judul', 'like', "%{$searchTerm}%"));
+            });
+        }
+
+        $comments = $query->paginate(20)->withQueryString();
+
+        return view('comments.index', compact('comments'));
+    }
+
     /**
      * Store a new comment (auth required via route middleware).
      */

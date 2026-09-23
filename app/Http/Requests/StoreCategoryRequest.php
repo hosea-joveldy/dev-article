@@ -34,8 +34,18 @@ class StoreCategoryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nama.required' => 'Name is required.',
-            'nama.unique' => 'A category with this name already exists.',
+            'nama.required' => 'Category name is required.',
+            'nama.unique' => 'This category name already exists.',
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'slug' => \Illuminate\Support\Str::slug($this->nama),
+        ]);
     }
 }
