@@ -9,6 +9,7 @@ Project instructions for every agent working in this repository. Read this fully
 - **Stack:** Laravel 13 + Breeze (Blade), Tailwind CSS, Vite, Pest/PHPUnit.
 - **Model:** `Artikel` (`judul`, `konten`, `gambar`). Markdown rendering and a reading-time accessor already exist.
 - **Existing features:** article list/detail, create/edit/delete, search (`q`), sort (`latest` / `oldest` / `title_asc`), pagination (6 per page), Breeze auth and profile.
+- **Features**: Implement the features in FEATURE.md
 
 ## 2. Mission
 
