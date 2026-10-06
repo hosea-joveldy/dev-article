@@ -6,8 +6,12 @@ use App\Http\Controllers\ArtikelReactionController;
 use App\Http\Controllers\KomentarController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FeedController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+
+// Public newsletter subscription
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
 // Public landing page for guests; authenticated users redirect to the article list
 Route::get('/', function () {

@@ -156,8 +156,19 @@
             <div class="newsletter">
                 <h3>Stay curious.</h3>
                 <p>Dapatkan artikel pilihan langsung ke inbox.</p>
-                <input type="email" placeholder="Email address">
-                <button class="pill" style="width:100%" type="button">Subscribe</button>
+                @if (session('newsletter_success'))
+                    <div class="p-3 my-2 text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 rounded">
+                        {{ session('newsletter_success') }}
+                    </div>
+                @endif
+                <form action="{{ route('newsletter.subscribe') }}" method="POST">
+                    @csrf
+                    <input type="email" name="email" placeholder="Email address" value="{{ auth()->user()->email ?? old('email') }}" required>
+                    @error('email')
+                        <p class="text-xs text-red-600 mb-2">{{ $message }}</p>
+                    @enderror
+                    <button class="pill" style="width:100%" type="submit">Subscribe</button>
+                </form>
             </div>
         </aside>
     </div>
