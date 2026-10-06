@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ruang — Edit story</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar"><div class="container nav">
+  <a class="brand" href="index.html">Ruang.</a>
+  <nav class="navlinks"><a href="main.html">Explore</a><a href="main.html#topics">Topics</a><a href="main.html" class="pill">Back to stories</a></nav>
+</div></header>
+
+<main class="article-wrap">
+  <h1 class="serif" style="font-size:42px;margin:0 0 10px;font-weight:400;">Edit story.</h1>
+  <p style="color:var(--muted);margin:0 0 32px;font-size:15px;">Perbarui judul, kategori, atau isi artikel Anda.</p>
+
+  <form style="display:flex;flex-direction:column;gap:24px;">
+    <div>
+      <label class="form-label">Story Title *</label>
+      <input class="form-input" value="Mengapa Data yang Terhubung Mengubah Cara Bisnis Mengambil Keputusan?" style="font-size:18px;font-weight:600;padding:14px 16px;">
+    </div>
+    <div>
+      <label class="form-label">Topic / Category</label>
+      <select class="form-input" style="padding:12px 14px;">
+        <option selected>Business</option>
+        <option>Technology</option>
+        <option>Finance</option>
+        <option>Productivity</option>
+      </select>
+    </div>
+    <div>
+      <label class="form-label">Content * (Markdown supported)</label>
+      <textarea class="form-textarea" rows="15">Di banyak perusahaan, data sebenarnya tersedia dalam jumlah besar. Transaksi penjualan tercatat, aktivitas pembelian tersimpan, stok diperbarui, dan laporan keuangan terus bertambah.</textarea>
+    </div>
+    <div>
+      <label class="form-label">Featured Image (optional)</label>
+      <input type="file" class="form-input">
+      <div style="font-size:12px;color:var(--muted);margin-top:6px;">Biarkan kosong jika tidak ingin mengganti cover yang sudah ada.</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--line);">
+      <a href="article.html" class="pill-outline">Cancel</a>
+      <button type="button" class="pill">Save changes</button>
+    </div>
+  </form>
+</main>
+
+<footer class="footer"><div class="container footer-inner"><span>© 2026 Ruang Editorial</span><div class="footer-links"><a href="#">About</a><a href="#">Privacy</a><a href="#">Contact</a></div></div></footer>
+</body></html>

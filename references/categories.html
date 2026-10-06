@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ruang — Admin Categories</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar"><div class="container nav">
+  <a class="brand" href="index.html">Ruang.</a>
+  <nav class="navlinks"><a href="main.html">Explore</a><a href="create.html">Write</a><a href="main.html" class="pill">Back to stories</a></nav>
+</div></header>
+
+<main class="container" style="padding:40px 0;">
+  <div class="admin-shell">
+    <aside class="admin-sidebar">
+      <div class="serif" style="font-size:20px;font-weight:700;">Ruang Admin</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px;">Editorial Console</div>
+      <nav class="admin-nav">
+        <a href="admin.html">Overview</a>
+        <a href="categories.html" class="active">Categories</a>
+        <a href="users.html">Users</a>
+        <a href="comments.html">Comments</a>
+      </nav>
+    </aside>
+
+    <section class="admin-main">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;">
+        <div>
+          <h1 class="serif" style="font-size:32px;margin:0 0 6px;font-weight:400;">Categories</h1>
+          <p style="color:var(--muted);font-size:14px;margin:0;">Organize and manage story topics across Ruang.</p>
+        </div>
+        <a href="#" class="pill" style="font-size:13px;padding:9px 18px;">+ New Category</a>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Slug</th>
+              <th>Articles</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><strong>Business</strong></td>
+              <td><code>business</code></td>
+              <td>8 stories</td>
+              <td>
+                <a href="#" class="pill-outline" style="padding:4px 10px;font-size:12px;">Edit</a>
+                <button type="button" class="pill-outline" style="padding:4px 10px;font-size:12px;color:#c00;border-color:#fcc;">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><strong>Technology</strong></td>
+              <td><code>technology</code></td>
+              <td>6 stories</td>
+              <td>
+                <a href="#" class="pill-outline" style="padding:4px 10px;font-size:12px;">Edit</a>
+                <button type="button" class="pill-outline" style="padding:4px 10px;font-size:12px;color:#c00;border-color:#fcc;">Delete</button>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><strong>Finance</strong></td>
+              <td><code>finance</code></td>
+              <td>4 stories</td>
+              <td>
+                <a href="#" class="pill-outline" style="padding:4px 10px;font-size:12px;">Edit</a>
+                <button type="button" class="pill-outline" style="padding:4px 10px;font-size:12px;color:#c00;border-color:#fcc;">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="footer"><div class="container footer-inner"><span>© 2026 Ruang Editorial</span><div class="footer-links"><a href="#">About</a><a href="#">Privacy</a><a href="#">Contact</a></div></div></footer>
+</body></html>
