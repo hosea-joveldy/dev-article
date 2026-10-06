@@ -11,8 +11,25 @@ export default {
 
     theme: {
         extend: {
+            colors: {
+                ink: '#242424',
+                'ink-strong': '#191919',
+                muted: '#6b6b6b',
+                line: '#e5e5e5',
+                cream: '#f7f4ed',
+                paper: '#ffffff',
+                soft: '#f2f2f2',
+                accent: {
+                    DEFAULT: '#1a8917',
+                    dark: '#146b12',
+                },
+            },
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', 'ui-sans-serif', 'system-ui', ...defaultTheme.fontFamily.sans],
+                serif: ['Georgia', 'Times New Roman', ...defaultTheme.fontFamily.serif],
+            },
+            maxWidth: {
+                container: '1180px',
             },
         },
     },

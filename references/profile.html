@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ruang — Profile Settings</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar"><div class="container nav">
+  <a class="brand" href="index.html">Ruang.</a>
+  <nav class="navlinks"><a href="main.html">Explore</a><a href="create.html">Write</a><a href="main.html" class="pill">Back to stories</a></nav>
+</div></header>
+
+<main class="article-wrap" style="max-width:760px;">
+  <h1 class="serif" style="font-size:36px;margin:0 0 8px;font-weight:400;">Profile Settings</h1>
+  <p style="color:var(--muted);font-size:14px;margin:0 0 36px;">Manage your account information and preferences.</p>
+
+  <div style="display:flex;flex-direction:column;gap:32px;">
+    <section style="border:1px solid var(--line);border-radius:8px;padding:32px;background:#fff;">
+      <h2 style="font-size:18px;margin:0 0 6px;">Profile Information</h2>
+      <p style="color:var(--muted);font-size:13px;margin:0 0 20px;">Update your account's profile name and email address.</p>
+      <form style="display:flex;flex-direction:column;gap:16px;max-width:480px;">
+        <div>
+          <label class="form-label">Name</label>
+          <input class="form-input" value="Arga Pratama">
+        </div>
+        <div>
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" value="arga@example.com">
+        </div>
+        <button type="button" class="pill" style="align-self:flex-start;">Save Profile</button>
+      </form>
+    </section>
+
+    <section style="border:1px solid var(--line);border-radius:8px;padding:32px;background:#fff;">
+      <h2 style="font-size:18px;margin:0 0 6px;">Update Password</h2>
+      <p style="color:var(--muted);font-size:13px;margin:0 0 20px;">Ensure your account is using a long, random password to stay secure.</p>
+      <form style="display:flex;flex-direction:column;gap:16px;max-width:480px;">
+        <div>
+          <label class="form-label">Current Password</label>
+          <input type="password" class="form-input" placeholder="••••••••">
+        </div>
+        <div>
+          <label class="form-label">New Password</label>
+          <input type="password" class="form-input" placeholder="••••••••">
+        </div>
+        <div>
+          <label class="form-label">Confirm Password</label>
+          <input type="password" class="form-input" placeholder="••••••••">
+        </div>
+        <button type="button" class="pill" style="align-self:flex-start;">Update Password</button>
+      </form>
+    </section>
+  </div>
+</main>
+
+<footer class="footer"><div class="container footer-inner"><span>© 2026 Ruang Editorial</span><div class="footer-links"><a href="#">About</a><a href="#">Privacy</a><a href="#">Contact</a></div></div></footer>
+</body></html>

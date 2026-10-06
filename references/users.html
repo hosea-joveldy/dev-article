@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ruang — Admin Users</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar"><div class="container nav">
+  <a class="brand" href="index.html">Ruang.</a>
+  <nav class="navlinks"><a href="main.html">Explore</a><a href="create.html">Write</a><a href="main.html" class="pill">Back to stories</a></nav>
+</div></header>
+
+<main class="container" style="padding:40px 0;">
+  <div class="admin-shell">
+    <aside class="admin-sidebar">
+      <div class="serif" style="font-size:20px;font-weight:700;">Ruang Admin</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px;">Editorial Console</div>
+      <nav class="admin-nav">
+        <a href="admin.html">Overview</a>
+        <a href="categories.html">Categories</a>
+        <a href="users.html" class="active">Users</a>
+        <a href="comments.html">Comments</a>
+      </nav>
+    </aside>
+
+    <section class="admin-main">
+      <div style="margin-bottom:28px;">
+        <h1 class="serif" style="font-size:32px;margin:0 0 6px;font-weight:400;">User Management</h1>
+        <p style="color:var(--muted);font-size:14px;margin:0;">View member accounts, assign admin roles, and moderate access.</p>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Stories</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Administrator</strong></td>
+              <td>admin@ruang.id</td>
+              <td><span style="background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:3px 8px;font-size:11px;font-weight:700;">Admin</span></td>
+              <td>12</td>
+              <td>Sep 2026</td>
+              <td><span style="font-size:12px;color:var(--muted);">Primary Admin</span></td>
+            </tr>
+            <tr>
+              <td><strong>Arga Pratama</strong></td>
+              <td>arga@example.com</td>
+              <td><span style="color:var(--muted);font-size:12px;">Author</span></td>
+              <td>5</td>
+              <td>Sep 2026</td>
+              <td>
+                <button type="button" class="pill-outline" style="padding:4px 10px;font-size:12px;">Make Admin</button>
+                <button type="button" class="pill-outline" style="padding:4px 10px;font-size:12px;color:#c00;border-color:#fcc;">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="footer"><div class="container footer-inner"><span>© 2026 Ruang Editorial</span><div class="footer-links"><a href="#">About</a><a href="#">Privacy</a><a href="#">Contact</a></div></div></footer>
+</body></html>
