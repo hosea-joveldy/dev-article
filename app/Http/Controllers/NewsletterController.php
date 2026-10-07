@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ThankYouForSubscribing;
 use App\Models\Subscriber;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class NewsletterController extends Controller
 {
@@ -19,9 +21,15 @@ class NewsletterController extends Controller
             'email.email' => 'Please provide a valid email address.',
         ]);
 
+        $email = strtolower(trim($validated['email']));
+
         $subscriber = Subscriber::firstOrCreate(
-            ['email' => strtolower(trim($validated['email']))]
+            ['email' => $email]
         );
+
+        if ($subscriber->wasRecentlyCreated) {
+            Mail::to($subscriber->email)->send(new ThankYouForSubscribing($subscriber->email));
+        }
 
         $message = $subscriber->wasRecentlyCreated
             ? 'Thank you! You have successfully subscribed to the Ruang newsletter.'

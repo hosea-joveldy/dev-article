@@ -18,7 +18,8 @@ Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('artikel.index');
     }
-    return view('welcome');
+    $articles = \App\Models\Artikel::with(['category', 'user'])->latest()->take(3)->get();
+    return view('welcome', compact('articles'));
 })->name('home');
 
 // All protected routes: dashboard, profile, and articles (accessible only to logged-in users)

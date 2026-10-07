@@ -54,14 +54,14 @@ class ArtikelTest extends TestCase
         $this->get('/sitemap.xml')->assertRedirect('/login');
     }
 
-    public function test_guest_landing_page_does_not_reveal_database_articles(): void
+    public function test_guest_landing_page_displays_actual_articles(): void
     {
-        $secretTitle = 'Confidential Quantum Leak 9988';
-        Artikel::factory()->create(['judul' => $secretTitle]);
+        $title = 'Confidential Quantum Leak 9988';
+        Artikel::factory()->create(['judul' => $title]);
 
         $response = $this->get('/');
         $response->assertStatus(200);
-        $response->assertDontSee($secretTitle);
+        $response->assertSee($title);
     }
 
     public function test_authenticated_user_on_root_is_redirected_to_article_list(): void
