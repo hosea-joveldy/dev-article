@@ -192,7 +192,6 @@
         <a class="brand" href="{{ route('home') }}">Ruang.</a>
         <nav class="navlinks">
             <a href="{{ route('artikel.index') }}">Explore</a>
-            <a href="{{ route('artikel.index') }}#topics">Topics</a>
             <a href="{{ route('artikel.index') }}" class="pill">Back to stories</a>
         </nav>
     </div>
@@ -218,20 +217,7 @@
     <form action="{{ route('artikel.store') }}" method="POST" enctype="multipart/form-data" id="storyForm">
         @csrf
 
-        <div class="editor-top-bar">
-            <div>
-                <select name="category_id" id="category_id" class="editor-category-select" aria-label="Topic Category">
-                    <option value="">Select Topic (optional)</option>
-                    @foreach (($categories ?? collect()) as $category)
-                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                            {{ $category->nama }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('category_id')
-                    <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+        <div class="editor-top-bar" style="justify-content: flex-end;">
             <div style="display:flex;align-items:center;gap:12px;">
                 <a href="{{ route('artikel.index') }}" class="pill-outline">Cancel</a>
                 <button type="submit" class="pill">Publish story</button>

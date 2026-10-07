@@ -7,6 +7,8 @@ test.describe('Ruang App Suite', () => {
         // Brand and title
         await expect(page).toHaveTitle(/Ruang — Stories & Ideas/);
         await expect(page.locator('.brand')).toHaveText('Ruang.');
+        await expect(page.locator('nav.navlinks a:has-text("Topics")')).toHaveCount(0);
+        await expect(page.locator('#topics')).toHaveCount(0);
 
         // Hero and Feature strip
         await expect(page.locator('.hero h1')).toContainText('Ideas worth');
@@ -14,9 +16,8 @@ test.describe('Ruang App Suite', () => {
         await expect(page.locator('.feature-strip')).toContainText('02 — EDITORIAL');
         await expect(page.locator('.feature-strip')).toContainText('03 — SIMPLE');
 
-        // Explore topics & Latest stories
+        // Latest stories
         await expect(page.locator('#latest')).toContainText('Latest stories');
-        await expect(page.locator('#topics')).toContainText('Explore topics');
 
         // Clicking explore redirects guest to /login
         await page.click('nav.navlinks a:has-text("Explore")');
@@ -34,7 +35,7 @@ test.describe('Ruang App Suite', () => {
         await expect(page).toHaveURL(/\/login/);
     });
 
-    test('user can log in, view article feed, search and filter topics', async ({ page }) => {
+    test('user can log in, view article feed, and search', async ({ page }) => {
         await page.goto('/login');
         await expect(page.locator('h1')).toContainText('Welcome back.');
 
@@ -45,8 +46,9 @@ test.describe('Ruang App Suite', () => {
         // Should land on article feed
         await expect(page).toHaveURL(/\/artikel/);
         await expect(page.locator('.page-title')).toHaveText('Explore stories.');
+        await expect(page.locator('nav.navlinks a:has-text("Topics")')).toHaveCount(0);
         await expect(page.locator('.sidebar')).toContainText('ABOUT RUANG');
-        await expect(page.locator('.sidebar')).toContainText('RECOMMENDED TOPICS');
+        await expect(page.locator('#topics')).toHaveCount(0);
 
         // When logged in, visiting / redirects to /artikel
         await page.goto('/');
@@ -66,6 +68,7 @@ test.describe('Ruang App Suite', () => {
         await firstArticleLink.click();
 
         await expect(page).toHaveURL(/\/artikel\/\d+/);
+        await expect(page.locator('nav.navlinks a:has-text("Topics")')).toHaveCount(0);
         await expect(page.locator('.article-title')).toBeVisible();
         await expect(page.locator('.article-byline')).toBeVisible();
         await expect(page.locator('.article-body')).toBeVisible();
@@ -91,6 +94,8 @@ test.describe('Ruang App Suite', () => {
         await page.click('nav.navlinks a:has-text("Write")');
         await expect(page).toHaveURL(/\/artikel\/create/);
         await expect(page.locator('h1')).toContainText('Write a story.');
+        await expect(page.locator('nav.navlinks a:has-text("Topics")')).toHaveCount(0);
+        await expect(page.locator('select[name="category_id"]')).toHaveCount(0);
 
         const testTitle = 'E2E Playwright Automated Story ' + Date.now();
         await page.fill('input[name="judul"]', testTitle);

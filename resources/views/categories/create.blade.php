@@ -5,8 +5,8 @@
         <main class="flex-1 p-8 sm:p-10">
             <div class="max-w-2xl">
                 <div class="mb-8">
-                    <h1 class="serif text-3xl font-normal text-[#191919]">Create Topic</h1>
-                    <p class="mt-1 text-sm text-stone-500">Add a new topic for organizing stories.</p>
+                    <h1 class="serif text-3xl font-normal text-[#191919]">Create Category</h1>
+                    <p class="mt-1 text-sm text-stone-500">Add a new category for organizing stories.</p>
                 </div>
 
                 @if ($errors->any())
@@ -23,7 +23,7 @@
                     @csrf
 
                     <div>
-                        <label for="nama" class="label-ruang">Topic Name *</label>
+                        <label for="nama" class="label-ruang">Category Name *</label>
                         <input type="text"
                                id="nama"
                                name="nama"
@@ -43,7 +43,7 @@
                             Cancel
                         </a>
                         <button type="submit" class="pill">
-                            Save Topic
+                            Save Category
                         </button>
                     </div>
                 </form>
