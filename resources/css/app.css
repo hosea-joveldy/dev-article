@@ -517,15 +517,7 @@ button, input, select, textarea {
 }
 
 .feed-img:after {
-  content: "";
-  position: absolute;
-  width: 90px;
-  height: 90px;
-  border: 1px solid #aaa;
-  border-radius: 50%;
-  right: 20px;
-  top: 16px;
-  pointer-events: none;
+  display: none;
 }
 
 .meta {

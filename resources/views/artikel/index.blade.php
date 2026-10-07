@@ -97,7 +97,7 @@
                         </div>
                         @if ($artikel->gambar)
                             <a href="{{ route('artikel.show', $artikel->id) }}" class="feed-img" aria-label="Read article">
-                                <img src="{{ asset('storage/' . $artikel->gambar) }}" alt="{{ $artikel->judul }}">
+                                <img src="{{ route('artikel.image', $artikel->id) }}" alt="{{ $artikel->judul }}">
                             </a>
                         @else
                             <a href="{{ route('artikel.show', $artikel->id) }}" class="feed-img" aria-label="Read article"></a>
