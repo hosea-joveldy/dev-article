@@ -18,8 +18,9 @@ class ArtikelFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id' => \App\Models\User::factory(),
             'judul' => fake()->sentence(5),
-            'konten' => fake()->paragraphs(3, true)
+            'konten' => fake()->paragraphs(3, true),
         ];
     }
 }

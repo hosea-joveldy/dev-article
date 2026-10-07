@@ -24,7 +24,7 @@ class UpdateArtikelRequest extends FormRequest
         return [
             'judul' => 'required|string|max:150',
             'konten' => 'required|string',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:4096',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
             'category_id' => 'nullable|exists:categories,id',
         ];
     }

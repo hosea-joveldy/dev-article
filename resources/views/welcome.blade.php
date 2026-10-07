@@ -1,235 +1,131 @@
-@extends('artikel_layout')
-
-@section('title', 'Index — dev.logs')
-
-<style>
-    .reaction-off { color: var(--text-muted); }
-    .reaction-liked { color: var(--accent); font-weight: 700; }
-    .reaction-disliked { color: var(--danger); font-weight: 700; }
-</style>
-
-@section('content')
-<div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
-    <!-- Top Utility Bar: Branding + New Entry Button -->
-    <header class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 pb-8 border-b" style="border-color: var(--border);">
-        <div>
-            <div class="flex items-center space-x-2.5">
-                <span class="inline-block w-2.5 h-2.5 rounded-full" style="background-color: var(--accent);"></span>
-                <span class="text-xs uppercase tracking-widest font-mono font-semibold" style="color: var(--accent);">dev.logs // feed</span>
-            </div>
-            <h1 class="text-3xl sm:text-4xl font-black tracking-tight mt-2">Articles & Engineering Logs</h1>
-            <p class="text-xs sm:text-sm font-mono mt-2" style="color: var(--text-muted);">
-                A home for developers &bull; Architectural decisions, field notes, and deep dives.
-            </p>
-        </div>
-
-        <div>
-            <a href="{{ route('artikel.create') }}" class="inline-flex items-center text-xs font-semibold px-4 py-2.5 rounded font-mono tracking-wide transition-opacity hover:opacity-90" style="background-color: var(--accent); color: var(--bg-main);">
-                [+ New Entry]
-            </a>
-        </div>
-    </header>
-
-    <!-- Instant Search & Sort Filter (Auto-Submitting, No redundant button) -->
-    <section class="mt-8 mb-10">
-        <form id="filterForm" method="GET" action="{{ url('/') }}" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <!-- Search Input -->
-            <div class="relative flex-1">
-                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none" style="color: var(--text-muted);">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                </div>
-                <input 
-                    type="text" 
-                    name="q" 
-                    value="{{ request('q') }}"
-                    placeholder="Search keywords or press enter..." 
-                    class="w-full text-xs font-mono pl-10 pr-4 py-2.5 rounded border focus:outline-none focus:ring-1"
-                    style="background-color: var(--bg-surface); border-color: var(--border); color: var(--text-main); --tw-ring-color: var(--accent);"
-                >
-            </div>
-
-            <!-- Sort Option (Submits on Change) -->
-            <div class="relative sm:w-48">
-                <select 
-                    name="sort" 
-                    onchange="document.getElementById('filterForm').submit()"
-                    class="w-full text-xs font-mono py-2.5 px-3 rounded border appearance-none pr-8 cursor-pointer focus:outline-none" 
-                    style="background-color: var(--bg-surface); border-color: var(--border); color: var(--text-main);"
-                >
-                    <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Sort: Latest</option>
-                    <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Sort: Oldest</option>
-                    <option value="title_asc" {{ request('sort') == 'title_asc' ? 'selected' : '' }}>Sort: Title (A-Z)</option>
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5" style="color: var(--text-muted);">
-                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </div>
-            </div>
-
-            <!-- Category Filter (Submits on Change, preserves q/sort) -->
-            <div class="relative sm:w-48">
-                <select
-                    name="category"
-                    onchange="document.getElementById('filterForm').submit()"
-                    class="w-full text-xs font-mono py-2.5 px-3 rounded border appearance-none pr-8 cursor-pointer focus:outline-none"
-                    style="background-color: var(--bg-surface); border-color: var(--border); color: var(--text-main);"
-                >
-                    <option value="">Category: All</option>
-                    @foreach (($categories ?? collect()) as $cat)
-                        <option value="{{ $cat->id }}" {{ (($activeCategory ?? null)?->id ?? null) === $cat->id ? 'selected' : '' }}>{{ $cat->nama }}</option>
-                    @endforeach
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5" style="color: var(--text-muted);">
-                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </div>
-            </div>
-
-            <!-- Clear Active Filters -->
-            @if(request()->hasAny(['q', 'sort', 'category']))
-                <a href="{{ url('/') }}" class="text-xs font-mono flex items-center justify-center px-3 py-2 rounded border hover:opacity-80 transition" style="background-color: var(--bg-surface-alt); border-color: var(--border); color: var(--text-muted);">
-                    [Reset]
-                </a>
-            @endif
-        </form>
-    </section>
-
-    <!-- Active Category Notice -->
-    @if (! empty($activeCategory ?? null))
-        <p class="mb-6 text-xs font-mono" style="color: var(--text-muted);">
-            Filtering by category:
-            <span class="px-2 py-0.5 rounded border font-semibold" style="background-color: var(--bg-surface); border-color: var(--border); color: var(--accent);">{{ $activeCategory->nama }}</span>
-            <a href="{{ url('/') . '?' . http_build_query(request()->except(['category', 'page'])) }}" class="underline hover:opacity-80 ml-1">[clear]</a>
-        </p>
-    @endif
-
-    <!-- Content Grid (1 col mobile, 2 col tablet, 3 col desktop) -->
-    <main class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        @forelse ($berita as $artikel)
-            <article class="flex flex-col rounded overflow-hidden border transition-all duration-200 hover:-translate-y-1" style="background-color: var(--bg-surface); border-color: var(--border);">
-                <!-- Media / Header Frame -->
-                @if ($artikel->gambar)
-                    <div class="h-44 w-full overflow-hidden bg-black/20">
-                        <img src="{{ asset('storage/' . $artikel->gambar) }}" alt="{{ $artikel->judul }}" class="w-full h-full object-cover">
-                    </div>
-                @else
-                    <div class="h-24 w-full flex items-center px-4 font-mono text-xs border-b" style="background-color: var(--bg-surface-alt); border-color: var(--border); color: var(--text-muted);">
-                        // no_attachment
-                    </div>
-                @endif
-
-                <!-- Article Body -->
-                <div class="p-5 flex-1 flex flex-col justify-between">
-                    <div>
-                        <time class="font-mono text-xs" style="color: var(--text-muted);">
-                            {{ $artikel->created_at ? $artikel->created_at->format('Y-m-d') : 'Draft' }}
-                        </time>
-                        
-                        <h2 class="text-base font-bold mt-2 leading-snug hover:underline">
-                            <a href="{{ route('artikel.show', $artikel->id) }}">
-                                {{ $artikel->judul }}
-                            </a>
-                        </h2>
-
-                        <p class="mt-3 text-xs leading-relaxed line-clamp-3" style="color: var(--text-muted);">
-                            {{ Str::limit(strip_tags($artikel->konten_html), 120, '...') }}
-                        </p>
-
-                        <!-- Category Badge + Like/Dislike Counts -->
-                        <div class="mt-3 flex flex-wrap items-center gap-2 text-xs font-mono">
-                            @if ($artikel->category)
-                                <a href="{{ url('/') . '?category=' . $artikel->category->id }}" class="px-2 py-0.5 rounded border hover:opacity-80" style="background-color: var(--bg-surface-alt); border-color: var(--border); color: var(--accent);">
-                                    {{ $artikel->category->nama }}
-                                </a>
-                            @endif
-                            @php
-                                $myReaction = (int) (($userReactions ?? collect())[$artikel->id] ?? 0);
-                                $likeClass = $myReaction === 1 ? 'reaction-liked' : 'reaction-off';
-                                $dislikeClass = $myReaction === -1 ? 'reaction-disliked' : 'reaction-off';
-                            @endphp
-                            @auth
-                                <form action="{{ route('artikel.like', $artikel->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    <button type="submit" title="Like" class="hover:underline {{ $likeClass }}">
-                                        &#9650; {{ $artikel->likes_count ?? 0 }}
-                                    </button>
-                                </form>
-                                <form action="{{ route('artikel.dislike', $artikel->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    <button type="submit" title="Dislike" class="hover:underline {{ $dislikeClass }}">
-                                        &#9660; {{ $artikel->dislikes_count ?? 0 }}
-                                    </button>
-                                </form>
-                            @else
-                                <span title="Like" style="color: var(--text-muted);">&#9650; {{ $artikel->likes_count ?? 0 }}</span>
-                                <span title="Dislike" style="color: var(--text-muted);">&#9660; {{ $artikel->dislikes_count ?? 0 }}</span>
-                            @endauth
-                        </div>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="mt-6 pt-4 border-t flex items-center justify-between text-xs font-mono" style="border-color: var(--border);">
-                        <a href="{{ route('artikel.show', $artikel->id) }}" class="font-bold hover:underline" style="color: var(--accent);">
-                            Read ->
-                        </a>
-
-                        <div class="flex items-center gap-3">
-                            <a href="{{ route('artikel.edit', $artikel->id) }}" style="color: var(--warning);" class="hover:underline">
-                                Edit
-                            </a>
-                            <form action="{{ route('artikel.destroy', $artikel->id) }}" method="POST" onsubmit="return confirm('Delete this record?');" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" style="color: var(--danger);" class="hover:underline">
-                                    Del
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        @empty
-            <div class="col-span-full py-16 text-center border border-dashed rounded font-mono text-xs" style="border-color: var(--border); color: var(--text-muted);">
-                // No entries found matching the query.
-            </div>
-        @endforelse
-    </main>
-
-    <!-- Clean Compact Pagination -->
-    @php
-        $berita->appends(request()->query());
-    @endphp
-
-    @if ($berita->hasPages())
-        <nav class="mt-12 pt-6 border-t flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs" style="border-color: var(--border);">
-            <div class="order-2 sm:order-1 text-center sm:text-left" style="color: var(--text-muted);">
-                <span>PAGE {{ $berita->currentPage() }} / {{ $berita->lastPage() }}</span>
-                <span class="mx-1.5">&bull;</span>
-                <span>{{ $berita->total() }} ENTRIES</span>
-            </div>
-
-            <div class="order-1 sm:order-2 flex items-center gap-2">
-                @if ($berita->onFirstPage())
-                    <span class="px-3 py-1.5 rounded border opacity-40 cursor-not-allowed select-none" style="background-color: var(--bg-surface); border-color: var(--border); color: var(--text-muted);">
-                        &larr; Prev
-                    </span>
-                @else
-                    <a href="{{ $berita->previousPageUrl() }}" class="px-3 py-1.5 rounded border transition-colors hover:opacity-80" style="background-color: var(--bg-surface); border-color: var(--border); color: var(--accent);">
-                        &larr; Prev
-                    </a>
-                @endif
-
-                @if ($berita->hasMorePages())
-                    <a href="{{ $berita->nextPageUrl() }}" class="px-3 py-1.5 rounded border transition-colors hover:opacity-80" style="background-color: var(--bg-surface); border-color: var(--border); color: var(--accent);">
-                        Next &rarr;
-                    </a>
-                @else
-                    <span class="px-3 py-1.5 rounded border opacity-40 cursor-not-allowed select-none" style="background-color: var(--bg-surface); border-color: var(--border); color: var(--text-muted);">
-                        Next &rarr;
-                    </span>
-                @endif
-            </div>
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Ruang — Stories & Ideas</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body>
+<header class="topbar">
+    <div class="container nav">
+        <a class="brand" href="{{ route('home') }}">Ruang.</a>
+        <nav class="navlinks">
+            <a href="{{ route('artikel.index') }}">Explore</a>
+            <a href="#topics">Topics</a>
+            <a href="#about">About</a>
+            <a href="{{ route('artikel.index') }}" class="pill">Start reading</a>
         </nav>
-    @endif
-</div>
-@endsection
+    </div>
+</header>
+
+<main>
+<section class="hero">
+    <div class="container hero-inner">
+        <div>
+            <div class="eyebrow">Independent editorial platform</div>
+            <h1 class="serif">Ideas worth<br>taking your time.</h1>
+            <p>Temukan perspektif, insight, dan cerita yang membantu Anda memahami bisnis, teknologi, kreativitas, dan dunia di sekitar kita.</p>
+            <div class="hero-actions">
+                <a href="{{ route('artikel.index') }}" class="pill">Mulai membaca</a>
+                <a href="#latest" class="text-link">Lihat artikel terbaru &rarr;</a>
+            </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+            <div class="orbit">
+                <span class="dot"></span>
+                <span class="dot two"></span>
+                <span class="dot three"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="feature-strip">
+    <div class="container feature-grid">
+        <article class="feature">
+            <div class="feature-number">01 — CURATED</div>
+            <h3>Dipilih untuk dibaca, bukan sekadar diklik.</h3>
+            <p>Koleksi artikel yang mengutamakan gagasan, konteks, dan kualitas tulisan.</p>
+        </article>
+        <article class="feature">
+            <div class="feature-number">02 — EDITORIAL</div>
+            <h3>Ruang untuk sudut pandang yang berbeda.</h3>
+            <p>Beragam topik dan perspektif disajikan dengan struktur yang mudah dipahami.</p>
+        </article>
+        <article class="feature">
+            <div class="feature-number">03 — SIMPLE</div>
+            <h3>Pengalaman membaca yang tenang.</h3>
+            <p>Tanpa visual yang berlebihan. Fokus utama tetap pada cerita dan ide.</p>
+        </article>
+    </div>
+</section>
+
+<section class="section" id="latest">
+    <div class="container">
+        <div class="section-head">
+            <h2>Latest stories</h2>
+            <a href="{{ route('artikel.index') }}">Explore all &rarr;</a>
+        </div>
+        <div class="article-grid">
+            <article class="card">
+                <div class="card-meta"><span>BUSINESS</span><span>6 min read</span></div>
+                <h3>Mengapa Data yang Terhubung Mengubah Cara Bisnis Mengambil Keputusan?</h3>
+                <p>Ketika informasi operasional dan finansial berjalan dalam satu alur, keputusan dapat dibuat dengan konteks yang lebih lengkap.</p>
+                <div class="author">By Arga Pratama · Sep 28</div>
+            </article>
+            <article class="card">
+                <div class="card-meta"><span>TECHNOLOGY</span><span>5 min read</span></div>
+                <h3>AI Bukan Sekadar Fitur: Cara Baru Memahami Data Bisnis</h3>
+                <p>Dari otomatisasi hingga insight, AI mulai menjadi lapisan baru dalam cara perusahaan bekerja dengan data.</p>
+                <div class="author">By Naya Putri · Sep 27</div>
+            </article>
+            <article class="card">
+                <div class="card-meta"><span>WORK</span><span>7 min read</span></div>
+                <h3>Ketika Produktivitas Tidak Lagi Berarti Bekerja Lebih Cepat</h3>
+                <p>Bagaimana sistem kerja yang lebih jelas dapat memberi ruang untuk pekerjaan yang benar-benar penting.</p>
+                <div class="author">By Raka Wijaya · Sep 25</div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="topics">
+    <div class="container">
+        <div class="section-head">
+            <h2>Explore topics</h2>
+        </div>
+        <div class="topic-row">
+            <a class="topic" href="{{ route('artikel.index', ['category' => 'business']) }}">Business</a>
+            <a class="topic" href="{{ route('artikel.index', ['category' => 'technology']) }}">Technology</a>
+            <a class="topic" href="{{ route('artikel.index', ['category' => 'finance']) }}">Finance</a>
+            <a class="topic" href="{{ route('artikel.index', ['category' => 'productivity']) }}">Productivity</a>
+            <a class="topic" href="{{ route('artikel.index', ['category' => 'leadership']) }}">Leadership</a>
+            <a class="topic" href="{{ route('artikel.index', ['category' => 'marketing']) }}">Marketing</a>
+            <a class="topic" href="{{ route('artikel.index', ['category' => 'design']) }}">Design</a>
+            <a class="topic" href="{{ route('artikel.index', ['category' => 'career']) }}">Career</a>
+        </div>
+    </div>
+</section>
+
+<section class="cta" id="about">
+    <div class="container cta-inner">
+        <h2 class="serif">Baca lebih dalam. Pahami lebih jauh.</h2>
+        <p>Ruang dibuat untuk pembaca yang ingin menemukan ide bernilai tanpa harus melewati pengalaman yang penuh distraksi.</p>
+        <a href="{{ route('artikel.index') }}" class="pill">Explore stories</a>
+    </div>
+</section>
+</main>
+
+<footer class="footer">
+    <div class="container footer-inner">
+        <span>© 2026 Ruang Editorial</span>
+        <div class="footer-links">
+            <a href="#about">About</a>
+            <a href="#">Privacy</a>
+            <a href="#">Contact</a>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

@@ -12,11 +12,26 @@ class Artikel extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'user_id',
         'judul',
         'konten',
         'gambar',
         'category_id',
     ];
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Artikel $artikel) {
+            if ($artikel->gambar) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($artikel->gambar);
+            }
+        });
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function category(): BelongsTo
     {
