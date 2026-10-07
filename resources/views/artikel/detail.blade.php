@@ -43,9 +43,11 @@
 @endif
 
 <main class="article-wrap">
-    <div class="article-category">
-        {{ strtoupper($artikel->category?->nama ?? 'GENERAL') }}
-    </div>
+    @if($artikel->category)
+        <div class="article-category">
+            {{ strtoupper($artikel->category->nama) }}
+        </div>
+    @endif
 
     <h1 class="article-title">{{ $artikel->judul }}</h1>
 
@@ -142,7 +144,9 @@
                 @foreach($relatedArticles as $related)
                     <article class="card">
                         <div class="card-meta">
-                            <span>{{ strtoupper($related->category?->nama ?? 'GENERAL') }}</span>
+                            @if($related->category)
+                                <span>{{ strtoupper($related->category->nama) }}</span>
+                            @endif
                             <span>{{ $related->reading_time }} min read</span>
                         </div>
                         <h3><a href="{{ route('artikel.show', $related->id) }}">{{ $related->judul }}</a></h3>
