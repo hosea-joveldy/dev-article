@@ -112,14 +112,20 @@
             @endif
         </div>
 
-        <!-- Share (Feature 5) -->
-        <div class="flex items-center gap-2 text-xs text-stone-500">
-            <span>Share:</span>
-            <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->url()) }}&text={{ urlencode($artikel->judul) }}" target="_blank" rel="noopener" class="underline hover:text-stone-900">X</a>
-            <span>·</span>
-            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(request()->url()) }}" target="_blank" rel="noopener" class="underline hover:text-stone-900">LinkedIn</a>
-            <span>·</span>
-            <button type="button" onclick="navigator.clipboard.writeText(window.location.href); alert('Link copied to clipboard!');" class="underline hover:text-stone-900">Copy link</button>
+        <!-- Share: Copy link only -->
+        <div x-data="{ copied: false }" class="flex items-center text-xs text-stone-500">
+            <button
+                type="button"
+                @click="navigator.clipboard.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 2000)"
+                class="pill-outline text-xs flex items-center gap-1.5"
+                style="padding: 6px 14px;"
+            >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span x-text="copied ? 'Copied to clipboard!' : 'Copy link'">Copy link</span>
+            </button>
         </div>
     </div>
 
