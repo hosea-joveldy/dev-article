@@ -63,7 +63,7 @@
                 @forelse ($berita as $artikel)
                     <article class="feed-card">
                         <div>
-                            <div class="meta">{{ strtoupper($artikel->category?->nama ?? 'GENERAL') }} · {{ $artikel->reading_time }} min read</div>
+                            <div class="meta">{{ $artikel->category ? strtoupper($artikel->category->nama) . ' · ' : '' }}{{ $artikel->reading_time }} min read</div>
                             <h2><a href="{{ route('artikel.show', $artikel->id) }}">{{ $artikel->judul }}</a></h2>
                             <p>{{ Str::limit(strip_tags($artikel->konten), 160) }}</p>
                             <div class="meta flex flex-wrap items-center justify-between gap-2">
