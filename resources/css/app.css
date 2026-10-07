@@ -570,30 +570,55 @@ button, input, select, textarea {
   background: #e5e5e5;
 }
 
-.newsletter {
-  background: var(--cream);
-  padding: 22px;
-  border: 1px solid var(--line);
-  border-radius: 4px;
+.peoples-choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.newsletter h3 {
-  font: 400 26px/1.1 Georgia, serif;
-  margin: 0 0 10px;
+.peoples-choice-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
 }
 
-.newsletter p {
-  font-size: 13px;
+.peoples-choice-num {
+  font: 700 16px/1.2 Georgia, serif;
+  color: #cbd5e1;
+  user-select: none;
+  min-width: 20px;
+}
+
+.peoples-choice-meta {
+  font-size: 11px;
   color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
 }
 
-.newsletter input {
-  width: 100%;
-  border: 1px solid #ccc;
-  background: #fff;
-  padding: 10px 12px;
-  margin: 5px 0 9px;
-  border-radius: 4px;
+.peoples-choice-title {
+  font: 600 14px/1.3 Georgia, serif;
+  color: var(--ink-strong);
+  margin: 0;
+}
+
+.peoples-choice-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.peoples-choice-title a:hover {
+  text-decoration: underline;
+}
+
+.peoples-choice-byline {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .article-wrap {

@@ -49,6 +49,8 @@ test.describe('Ruang App Suite', () => {
         await expect(page.locator('.page-title')).toHaveText('Explore stories.');
         await expect(page.locator('nav.navlinks a:has-text("Topics")')).toHaveCount(0);
         await expect(page.locator('.sidebar')).toContainText('ABOUT RUANG');
+        await expect(page.locator('.sidebar')).toContainText("PEOPLE'S CHOICE");
+        await expect(page.locator('.peoples-choice-item').first()).toBeVisible();
         await expect(page.locator('#topics')).toHaveCount(0);
 
         // When logged in, visiting / redirects to /artikel
@@ -116,20 +118,6 @@ test.describe('Ruang App Suite', () => {
         await page.goto('/admin');
         await expect(page.locator('h1')).toHaveText('Admin Overview');
         await expect(page.locator('aside')).toContainText('Ruang Admin');
-    });
-
-    test('user can subscribe to newsletter and see success feedback', async ({ page }) => {
-        await page.goto('/login');
-        await page.fill('input[name="email"]', 'user@example.com');
-        await page.fill('input[name="password"]', 'password');
-        await page.click('button[type="submit"]');
-        await expect(page).toHaveURL(/\/artikel/);
-
-        const subscriberEmail = `test_sub_${Date.now()}@example.com`;
-        await page.fill('.newsletter input[name="email"]', subscriberEmail);
-        await page.click('.newsletter button[type="submit"]');
-
-        await expect(page.locator('.newsletter')).toContainText('Thank you! You have successfully subscribed to the Ruang newsletter.');
     });
 });
 

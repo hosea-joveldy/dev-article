@@ -86,6 +86,21 @@ class ArtikelTest extends TestCase
             ->assertSee($artikel->judul);
     }
 
+    public function test_authenticated_user_sees_peoples_choice_section_in_sidebar(): void
+    {
+        $user = User::factory()->create();
+        $artikel = Artikel::factory()->create([
+            'user_id' => $user->id,
+            'judul' => 'A Special Highlight Story',
+        ]);
+
+        $response = $this->actingAs($user)->get('/artikel');
+
+        $response->assertStatus(200)
+            ->assertSee("PEOPLE'S CHOICE", false)
+            ->assertSee('A Special Highlight Story');
+    }
+
     public function test_user_can_create_article_with_ownership(): void
     {
         Storage::fake('public');

@@ -133,23 +133,37 @@
                 <div class="side-title">ABOUT RUANG</div>
                 <p class="about">Platform artikel untuk insight yang thoughtful, praktis, dan relevan bagi pembaca modern.</p>
             </div>
-            <div class="newsletter">
-                <h3>Stay curious.</h3>
-                <p>Dapatkan artikel pilihan langsung ke inbox.</p>
-                @if (session('newsletter_success'))
-                    <div class="p-3 my-2 text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 rounded">
-                        {{ session('newsletter_success') }}
+
+            <!-- People's Choice -->
+            @if (!request('q') && !request('category'))
+                @php
+                    $peoplesChoice = $peoplesChoice ?? \App\Models\Artikel::with(['category', 'user'])->withCount('likes')->orderByDesc('likes_count')->latest()->take(4)->get();
+                @endphp
+                <div class="side-block">
+                    <div class="side-title">PEOPLE'S CHOICE</div>
+                    <div class="peoples-choice-list">
+                        @forelse ($peoplesChoice as $index => $item)
+                            <article class="peoples-choice-item">
+                                <span class="peoples-choice-num">0{{ $index + 1 }}</span>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div class="peoples-choice-meta">
+                                        {{ $item->category ? $item->category->nama . ' · ' : '' }}{{ $item->reading_time }} min read
+                                    </div>
+                                    <h4 class="peoples-choice-title">
+                                        <a href="{{ route('artikel.show', $item->id) }}">{{ $item->judul }}</a>
+                                    </h4>
+                                    <div class="peoples-choice-byline">
+                                        <span>{{ $item->user?->name ?? 'Ruang Writer' }}</span>
+                                        <span>♥ {{ $item->likes_count ?? 0 }}</span>
+                                    </div>
+                                </div>
+                            </article>
+                        @empty
+                            <p class="text-xs text-stone-400">Belum ada artikel pilihan.</p>
+                        @endforelse
                     </div>
-                @endif
-                <form action="{{ route('newsletter.subscribe') }}" method="POST">
-                    @csrf
-                    <input type="email" name="email" placeholder="Email address" value="{{ auth()->user()->email ?? old('email') }}" required>
-                    @error('email')
-                        <p class="text-xs text-red-600 mb-2">{{ $message }}</p>
-                    @enderror
-                    <button class="pill" style="width:100%" type="submit">Subscribe</button>
-                </form>
-            </div>
+                </div>
+            @endif
         </aside>
     </div>
 </main>
