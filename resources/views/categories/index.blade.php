@@ -6,11 +6,11 @@
             <div class="max-w-5xl">
                 <div class="flex items-center justify-between mb-8">
                     <div>
-                        <h1 class="serif text-3xl font-normal text-[#191919]">Topics & Categories</h1>
-                        <p class="mt-1 text-sm text-stone-500">Manage topics used for story categorization.</p>
+                        <h1 class="serif text-3xl font-normal text-[#191919]">Categories</h1>
+                        <p class="mt-1 text-sm text-stone-500">Manage categories used for story categorization.</p>
                     </div>
                     <a href="{{ route('admin.categories.create') }}" class="pill text-xs">
-                        + New Topic
+                        + New Category
                     </a>
                 </div>
 

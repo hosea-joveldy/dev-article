@@ -17,7 +17,7 @@
                     </div>
 
                     <div class="p-6 rounded-lg border border-[#e5e5e5] bg-[#f7f4ed]">
-                        <p class="text-xs uppercase tracking-wider font-semibold text-stone-500">Topics</p>
+                        <p class="text-xs uppercase tracking-wider font-semibold text-stone-500">Categories</p>
                         <p class="serif text-3xl font-normal mt-2 text-[#191919]">{{ \App\Models\Category::count() }}</p>
                     </div>
 
@@ -36,8 +36,8 @@
                 <h2 class="serif text-xl font-normal mb-4 text-[#191919]">Quick Actions</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <a href="{{ route('admin.categories.create') }}" class="p-6 rounded-lg border border-[#e5e5e5] hover:border-stone-400 transition-colors">
-                        <h3 class="font-semibold text-base mb-1 text-[#191919]">Create Topic / Category</h3>
-                        <p class="text-xs text-stone-500">Add a new topic for writers and readers</p>
+                        <h3 class="font-semibold text-base mb-1 text-[#191919]">Create Category</h3>
+                        <p class="text-xs text-stone-500">Add a new category for stories</p>
                     </a>
 
                     <a href="{{ route('admin.users.index') }}" class="p-6 rounded-lg border border-[#e5e5e5] hover:border-stone-400 transition-colors">

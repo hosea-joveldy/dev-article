@@ -25,7 +25,6 @@
         <a class="brand" href="{{ route('home') }}">Ruang.</a>
         <nav class="navlinks">
             <a href="{{ route('artikel.index') }}">Explore</a>
-            <a href="{{ route('artikel.index') }}#topics">Topics</a>
             <a href="{{ route('artikel.create') }}">Write</a>
             @if(auth()->user()?->is_admin)
                 <a href="{{ route('admin.dashboard') }}">Admin</a>

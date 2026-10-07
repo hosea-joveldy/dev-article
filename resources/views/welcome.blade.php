@@ -12,7 +12,6 @@
         <a class="brand" href="{{ route('home') }}">Ruang.</a>
         <nav class="navlinks">
             <a href="{{ route('artikel.index') }}">Explore</a>
-            <a href="#topics">Topics</a>
             <a href="#about">About</a>
             <a href="{{ route('artikel.index') }}" class="pill">Start reading</a>
         </nav>
@@ -90,23 +89,6 @@
     </div>
 </section>
 
-<section class="section" id="topics">
-    <div class="container">
-        <div class="section-head">
-            <h2>Explore topics</h2>
-        </div>
-        <div class="topic-row">
-            <a class="topic" href="{{ route('artikel.index', ['category' => 'business']) }}">Business</a>
-            <a class="topic" href="{{ route('artikel.index', ['category' => 'technology']) }}">Technology</a>
-            <a class="topic" href="{{ route('artikel.index', ['category' => 'finance']) }}">Finance</a>
-            <a class="topic" href="{{ route('artikel.index', ['category' => 'productivity']) }}">Productivity</a>
-            <a class="topic" href="{{ route('artikel.index', ['category' => 'leadership']) }}">Leadership</a>
-            <a class="topic" href="{{ route('artikel.index', ['category' => 'marketing']) }}">Marketing</a>
-            <a class="topic" href="{{ route('artikel.index', ['category' => 'design']) }}">Design</a>
-            <a class="topic" href="{{ route('artikel.index', ['category' => 'career']) }}">Career</a>
-        </div>
-    </div>
-</section>
 
 <section class="cta" id="about">
     <div class="container cta-inner">

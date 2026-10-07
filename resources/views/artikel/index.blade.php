@@ -12,7 +12,6 @@
         <a class="brand" href="{{ route('home') }}">Ruang.</a>
         <nav class="navlinks">
             <a href="{{ route('artikel.index') }}">Explore</a>
-            <a href="#topics">Topics</a>
             <a href="{{ route('artikel.create') }}">Write</a>
             @if(auth()->user()?->is_admin)
                 <a href="{{ route('admin.dashboard') }}">Admin</a>
@@ -45,19 +44,8 @@
                 @if(request('sort'))
                     <input type="hidden" name="sort" value="{{ request('sort') }}">
                 @endif
-                @if(request('category'))
-                    <input type="hidden" name="category" value="{{ request('category') }}">
-                @endif
-                <input class="search" name="q" value="{{ request('q') }}" placeholder="Search stories, topics, or authors..." aria-label="Search stories">
+                <input class="search" name="q" value="{{ request('q') }}" placeholder="Search stories or authors..." aria-label="Search stories">
             </form>
-
-            @if(!empty($activeCategory))
-                <div class="mb-6 text-xs flex items-center gap-2">
-                    <span class="text-stone-500">Filtering by topic:</span>
-                    <span class="px-2.5 py-1 bg-stone-100 rounded-full font-medium">{{ $activeCategory->nama }}</span>
-                    <a href="{{ route('artikel.index', request()->except(['category', 'page'])) }}" class="text-stone-400 hover:text-stone-700 underline text-xs">Clear</a>
-                </div>
-            @endif
 
             <!-- Tabs -->
             @php
@@ -106,8 +94,8 @@
                 @empty
                     <div class="py-16 text-center text-stone-500">
                         <p class="serif text-2xl mb-2">No stories found{{ request('q') ? ' for "' . e(request('q')) . '"' : '' }}.</p>
-                        <p class="text-sm text-stone-400">Try searching for other terms or explore all topics.</p>
-                        @if(request()->hasAny(['q', 'category', 'sort']))
+                        <p class="text-sm text-stone-400">Try searching for other terms.</p>
+                        @if(request()->hasAny(['q', 'sort']))
                             <div class="mt-4">
                                 <a href="{{ route('artikel.index') }}" class="pill-outline text-xs">Reset filters</a>
                             </div>
@@ -144,14 +132,6 @@
             <div class="side-block">
                 <div class="side-title">ABOUT RUANG</div>
                 <p class="about">Platform artikel untuk insight yang thoughtful, praktis, dan relevan bagi pembaca modern.</p>
-            </div>
-            <div class="side-block" id="topics">
-                <div class="side-title">RECOMMENDED TOPICS</div>
-                <div class="topic-list">
-                    @foreach (($categories ?? collect()) as $category)
-                        <a href="{{ route('artikel.index', array_merge(request()->except(['category', 'page']), ['category' => $category->slug ?? $category->id])) }}" class="{{ (($activeCategory?->id ?? null) === $category->id) ? 'bg-stone-300 font-semibold' : '' }}">{{ $category->nama }}</a>
-                    @endforeach
-                </div>
             </div>
             <div class="newsletter">
                 <h3>Stay curious.</h3>
