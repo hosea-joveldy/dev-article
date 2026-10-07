@@ -62,7 +62,7 @@ class ArtikelController extends Controller
 
         $berita = $query->paginate(6)->withQueryString();
 
-        // Current user's reactions for highlight on the list page
+        // Current user's reactions
         $userReactions = collect();
         if (auth()->check()) {
             $userReactions = ArticleReaction::where('user_id', auth()->id())
@@ -70,7 +70,15 @@ class ArtikelController extends Controller
                 ->pluck('value', 'artikel_id');
         }
 
-        return view('artikel.index', compact('berita', 'categories', 'activeCategory', 'userReactions'));
+        // People's Choice (popular stories sorted by likes)
+        $peoplesChoice = Artikel::with(['category', 'user'])
+            ->withCount('likes')
+            ->orderByDesc('likes_count')
+            ->latest()
+            ->take(4)
+            ->get();
+
+        return view('artikel.index', compact('berita', 'categories', 'activeCategory', 'userReactions', 'peoplesChoice'));
     }
 
     /**
