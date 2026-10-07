@@ -60,6 +60,10 @@
     </div>
 </section>
 
+@php
+    $articles = $articles ?? $artikels ?? \App\Models\Artikel::with(['category', 'user'])->latest()->take(3)->get();
+@endphp
+
 <section class="section" id="latest">
     <div class="container">
         <div class="section-head">
@@ -67,24 +71,18 @@
             <a href="{{ route('artikel.index') }}">Explore all &rarr;</a>
         </div>
         <div class="article-grid">
-            <article class="card">
-                <div class="card-meta"><span>BUSINESS</span><span>6 min read</span></div>
-                <h3>Mengapa Data yang Terhubung Mengubah Cara Bisnis Mengambil Keputusan?</h3>
-                <p>Ketika informasi operasional dan finansial berjalan dalam satu alur, keputusan dapat dibuat dengan konteks yang lebih lengkap.</p>
-                <div class="author">By Arga Pratama · Sep 28</div>
-            </article>
-            <article class="card">
-                <div class="card-meta"><span>TECHNOLOGY</span><span>5 min read</span></div>
-                <h3>AI Bukan Sekadar Fitur: Cara Baru Memahami Data Bisnis</h3>
-                <p>Dari otomatisasi hingga insight, AI mulai menjadi lapisan baru dalam cara perusahaan bekerja dengan data.</p>
-                <div class="author">By Naya Putri · Sep 27</div>
-            </article>
-            <article class="card">
-                <div class="card-meta"><span>WORK</span><span>7 min read</span></div>
-                <h3>Ketika Produktivitas Tidak Lagi Berarti Bekerja Lebih Cepat</h3>
-                <p>Bagaimana sistem kerja yang lebih jelas dapat memberi ruang untuk pekerjaan yang benar-benar penting.</p>
-                <div class="author">By Raka Wijaya · Sep 25</div>
-            </article>
+            @forelse ($articles as $artikel)
+                <article class="card">
+                    <div class="card-meta"><span>{{ $artikel->category ? strtoupper($artikel->category->nama) : 'ARTICLE' }}</span><span>{{ $artikel->reading_time }} min read</span></div>
+                    <h3><a href="{{ route('artikel.show', $artikel->id) }}">{{ $artikel->judul }}</a></h3>
+                    <p>{{ Str::limit(strip_tags($artikel->konten), 120) }}</p>
+                    <div class="author">By {{ $artikel->user?->name ?? 'Ruang Writer' }} · {{ $artikel->created_at ? $artikel->created_at->format('M d') : 'Recent' }}</div>
+                </article>
+            @empty
+                <div class="col-span-full py-8 text-stone-500">
+                    <p>Belum ada artikel yang tersedia.</p>
+                </div>
+            @endforelse
         </div>
     </div>
 </section>

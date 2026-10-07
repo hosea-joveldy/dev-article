@@ -18,6 +18,7 @@ test.describe('Ruang App Suite', () => {
 
         // Latest stories
         await expect(page.locator('#latest')).toContainText('Latest stories');
+        await expect(page.locator('#latest .article-grid .card').first()).toBeVisible();
 
         // Clicking explore redirects guest to /login
         await page.click('nav.navlinks a:has-text("Explore")');
@@ -116,4 +117,19 @@ test.describe('Ruang App Suite', () => {
         await expect(page.locator('h1')).toHaveText('Admin Overview');
         await expect(page.locator('aside')).toContainText('Ruang Admin');
     });
+
+    test('user can subscribe to newsletter and see success feedback', async ({ page }) => {
+        await page.goto('/login');
+        await page.fill('input[name="email"]', 'user@example.com');
+        await page.fill('input[name="password"]', 'password');
+        await page.click('button[type="submit"]');
+        await expect(page).toHaveURL(/\/artikel/);
+
+        const subscriberEmail = `test_sub_${Date.now()}@example.com`;
+        await page.fill('.newsletter input[name="email"]', subscriberEmail);
+        await page.click('.newsletter button[type="submit"]');
+
+        await expect(page.locator('.newsletter')).toContainText('Thank you! You have successfully subscribed to the Ruang newsletter.');
+    });
 });
+
