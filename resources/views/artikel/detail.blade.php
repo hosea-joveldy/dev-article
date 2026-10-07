@@ -77,7 +77,7 @@
 
     @if ($artikel->gambar)
         <div class="my-8 rounded overflow-hidden border border-stone-200">
-            <img src="{{ asset('storage/' . $artikel->gambar) }}" alt="{{ $artikel->judul }}" class="w-full max-h-[500px] object-cover">
+            <img src="{{ route('artikel.image', $artikel->id) }}" alt="{{ $artikel->judul }}" class="w-full max-h-[500px] object-cover">
         </div>
     @endif
 
